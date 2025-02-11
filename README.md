@@ -71,4 +71,3 @@ Skystore/
 
 ## Автор
 Maxim Merkulov. Почта для связи m.merkulovdodo@gmail.com
-
