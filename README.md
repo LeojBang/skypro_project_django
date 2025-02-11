@@ -1,1 +1,1 @@
-# skypro_project_django
+# skypro
