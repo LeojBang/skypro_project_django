@@ -35,7 +35,7 @@ class Product(models.Model):
         null=True,
     )
     image = models.ImageField(
-        upload_to="catalog/photo",
+        upload_to="photo",
         blank=True,
         null=True,
         help_text="Загрузите изображение продукта",
