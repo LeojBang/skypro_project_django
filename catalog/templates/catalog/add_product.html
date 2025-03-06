@@ -1,0 +1,26 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<h1>Добавление продукта</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.category }}<br>
+    {{ form.name }}<br>
+    {{ form.description }}<br>
+    {{ form.price }}<br>
+    {{ form.image }}<br>
+    <button type="submit" class="btn btn-primary mt-3">Добавить</button>
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <li>{{ field }}: {{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <span class="text-danger mt-3">{{ error }}</span>
+</form>
+{% endblock %}
