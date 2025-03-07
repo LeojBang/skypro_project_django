@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'catalog/base.html' %}
 {% load my_tags %}
 
 {% block content %}
@@ -9,8 +9,8 @@
         продать</p>
 </div>
 <div class="row justify-content-center text-center">
-    {% for product in products_list %}
-    {% include 'product_card.html' %}
+    {% for product in product_list %}
+    {% include 'catalog/product_card.html' %}
     {% endfor %}
 </div>
 {% endblock %}

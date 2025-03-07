@@ -1,49 +1,52 @@
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, TemplateView
 
 from catalog.forms import ProductForm
 from catalog.models import Product, Contact
 
 
-def home(request):
-    products_list = Product.objects.all()
-    context = {"products_list": products_list}
-    return render(request, "home.html", context)
+class ProductListView(ListView):
+    model = Product
 
 
-def product_info(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    context = {"product": product}
-    return render(request, "product_info.html", context)
+class ProductDetailView(DetailView):
+    model = Product
 
 
-def contacts(request):
-    contacts_data = Contact.objects.all()
-    latest_products = Product.objects.all().order_by("-created_at")[:5]
+class ContactsView(TemplateView):
+    template_name = "catalog/contacts.html"
 
-    if request.method == "POST":
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contacts"] = Contact.objects.all()
+        context["latest_products"] = Product.objects.all().order_by("-created_at")[:5]
+        return context
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get("name")
-        telephone = request.POST.get("phone")
+        phone = request.POST.get("phone")
         message = request.POST.get("message")
 
-        return HttpResponse(f"Спасибо {name} за отзыв! Ваше сообщение получено")
+        if name and phone and message:
+            Contact.objects.create(name=name, phone=phone, message=message)
 
-    return render(
-        request,
-        "contacts.html",
-        {"contacts": contacts_data, "latest_products": latest_products},
-    )
+        return redirect("catalog:contacts")
 
 
-def add_product(request):
-    if request.method == "POST":
+class AddProductView(TemplateView):
+    template_name = "catalog/add_product.html"
+    form_class = ProductForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.form_class
+        return context
+
+    def post(self, request, *args, **kwargs):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('catalog:home')
+            return redirect("catalog:product_list")
         else:
             print(form.errors)  # Выведет ошибки формы в консоль
-    else:
-        form = ProductForm()
-
-    return render(request, "add_product.html", {'form': form})
+        return render(request, "add_product.html", {"form": form})
