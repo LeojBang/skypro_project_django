@@ -1,5 +1,13 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import (
+    ListView,
+    DetailView,
+    TemplateView,
+    CreateView,
+    DeleteView,
+    UpdateView,
+)
 
 from catalog.forms import ProductForm
 from catalog.models import Product, Contact
@@ -7,10 +15,32 @@ from catalog.models import Product, Contact
 
 class ProductListView(ListView):
     model = Product
+    template_name = "catalog/product_list.html"
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_update.html"
+    success_url = reverse_lazy("catalog:product_list")
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_update.html"
+    success_url = reverse_lazy("catalog:product_list")
 
 
 class ProductDetailView(DetailView):
     model = Product
+    template_name = "catalog/product_detail.html"
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = "catalog/product_delete.html"
+    success_url = reverse_lazy("catalog:product_list")
 
 
 class ContactsView(TemplateView):
@@ -31,22 +61,3 @@ class ContactsView(TemplateView):
             Contact.objects.create(name=name, phone=phone, message=message)
 
         return redirect("catalog:contacts")
-
-
-class AddProductView(TemplateView):
-    template_name = "catalog/add_product.html"
-    form_class = ProductForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form"] = self.form_class
-        return context
-
-    def post(self, request, *args, **kwargs):
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect("catalog:product_list")
-        else:
-            print(form.errors)  # Выведет ошибки формы в консоль
-        return render(request, "add_product.html", {"form": form})
