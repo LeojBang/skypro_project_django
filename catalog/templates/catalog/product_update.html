@@ -1,0 +1,15 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<h1>Добавление продукта</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.as_p }}
+    {% if object %}
+        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+    {% else %}
+        <button type="submit" class="btn btn-primary mt-3">Добавить</button>
+    {% endif %}
+</form>
+{% endblock %}
