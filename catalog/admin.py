@@ -23,6 +23,7 @@ class ContactAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "email", "phone")
     search_fields = ("name", "phone", "email")
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'phone', 'avatar', 'country')
+    list_display = ("email", "phone", "avatar", "country")
