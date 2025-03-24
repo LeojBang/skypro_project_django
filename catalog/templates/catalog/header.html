@@ -5,8 +5,17 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product_create' %}">Добавить товар</a>
     </nav>
+    {% if user.is_authenticated %}
     <nav class="ms-auto">
-        <a class="p-2 btn btn-outline-primary" href="#">Вход</a>
-        <a class="p-2 btn btn-outline-primary" href="#">Регистрация</a>
+        <form action="{% url 'users:logout' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="p-2 btn btn-outline-primary">Выход</button>
+        </form>
     </nav>
+    {% else %}
+    <nav class="ms-auto">
+        <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
+    </nav>
+    {% endif %}
 </div>
