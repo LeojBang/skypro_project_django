@@ -5,9 +5,6 @@ from users.models import User
 
 
 class UserRegisterForm(UserCreationForm):
-    avatar = forms.ImageField(required=False, label="Аватар")
-    phone = forms.CharField(max_length=35, required=False, label="Телефон")
-    country = forms.CharField(max_length=50, required=False, label="Страна")
 
     class Meta(UserCreationForm.Meta):
         model = User
