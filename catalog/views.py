@@ -63,12 +63,6 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "catalog/product_delete.html"
     success_url = reverse_lazy("catalog:product_list")
 
-    def get_form_class(self):
-        user = self.request.user
-        if user.has_perm("catalog.delete_product"):
-            return ProductModeratorForm
-        raise PermissionDenied
-
     def get_queryset(self):
         """Ограничиваем доступ к удалению только владельцу или модератору."""
         if self.request.user.has_perm("catalog.delete_product"):
