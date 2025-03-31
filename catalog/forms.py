@@ -66,3 +66,9 @@ class ProductForm(ModelForm):
             ):
                 raise ValidationError("Файл недопустимого формата")
         return image
+
+
+class ProductModeratorForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = ("status",)
