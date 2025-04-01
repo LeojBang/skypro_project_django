@@ -1,5 +1,3 @@
-import re
-
 from .models import Product
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
