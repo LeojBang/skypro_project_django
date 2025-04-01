@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -12,12 +12,26 @@ from django.views.generic import (
 )
 
 from catalog.forms import ProductForm, ProductModeratorForm
-from catalog.models import Product, Contact
+from catalog.models import Product, Contact, Category
+from catalog.services import get_products_from_cache, ProductService
 
 
 class ProductListView(ListView):
     model = Product
     template_name = "catalog/product_list.html"
+
+    def get_queryset(self):
+        return get_products_from_cache()
+
+
+class ProductsByCategoryView(ListView):
+    model = Category
+    template_name = "catalog/product_category_list.html"
+    context_object_name = "categories"
+
+    def get_queryset(self):
+        category_id = self.kwargs.get('category_id')
+        return ProductService.get_products_from_category(category_id=category_id)
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
